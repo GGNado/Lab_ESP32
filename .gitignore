@@ -1,0 +1,25 @@
+# Output ESP-IDF / CMake
+**/build/
+**/cmake-build-*/
+**/managed_components/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/compile_commands.json
+**/sdkconfig.old
+
+# Impostazioni locali IDE e sistema
+**/.idea/
+**/.vscode/
+.DS_Store
+
+# Python e ambienti locali
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Credenziali e configurazioni private
+.env
+.env.*
+!.env.example

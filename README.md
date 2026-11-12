@@ -4,37 +4,22 @@ Quaderno pratico di esercizi su **ESP32-S3, ESP-IDF e FreeRTOS**, con circuiti v
 
 ## Esercizi disponibili
 
-| Cartella | Argomenti | Stato dell'archivio |
-|---|---|---|
-| [01 - GPIO, task e pulsante](esercizi/01-gpio-task-pulsante/) | LED, polling del pulsante, debounce a campioni, due task. | Versione recuperata dal file salvato `ricorda.c`. |
-| [02 - Comandi rover](esercizi/02-comandi-rover/) | Coda da un elemento, ultimo comando, timeout, periodicità e riferimenti delle ruote. | Fotografia del codice presente l'8 novembre 2026. |
-
-Sono esercizi didattici, non un firmware di produzione completo. Il codice è stato archiviato senza modifiche; la descrizione dell'esercizio distingue ciò che fa da eventuali miglioramenti successivi.
+| Esercizio | Argomenti |
+|---|---|
+| [01 - GPIO, task e pulsante](esercizi/01-gpio-task-pulsante/) | LED, polling del pulsante, debounce a campioni e due task. |
+| [02 - Comandi rover](esercizi/02-comandi-rover/) | Coda da un elemento, ultimo comando, timeout e riferimenti delle ruote. |
+| [03 - Tempi di controllo del rover](esercizi/03-tempi-controllo-rover/) | Task periodico, misure in tick e microsecondi, effetto dei ritardi sul ciclo. |
+| [04 - Segnalatore a tempo](esercizi/04-segnalatore-a-tempo/) | Interrupt GPIO, debounce nel task, coda delle pressioni e LED temporizzato. |
+| [05 - Parcheggio](esercizi/05-parcheggio/) | Due pulsanti, notifiche con `eSetBits`, conteggio dei posti e LED giallo temporizzato in un task dedicato. |
 
 ## Struttura
 
 ```text
 Lab_ESP32/
-├── esercizi/
-│   ├── 01-gpio-task-pulsante/
-│   │   ├── main/
-│   │   │   ├── hello_world_main.c
-│   │   │   └── CMakeLists.txt
-│   │   ├── CMakeLists.txt
-│   │   ├── diagram.json
-│   │   ├── wokwi.toml
-│   │   ├── sdkconfig
-│   │   └── README.md
-│   └── 02-comandi-rover/
-│       └── ... stessa struttura di progetto
-├── docs/
-│   ├── Riferimento_API_ESP32_FreeRTOS.md
-│   ├── Riferimento_API_ESP32_FreeRTOS.pdf
-│   └── registro_prova_template.md
+├── esercizi/   # Progetti ESP-IDF indipendenti con configurazione Wokwi
+├── docs/       # Manuale API e modello per registrare le prove
 └── README.md
 ```
-
-Il nome interno del progetto e del sorgente rimane `hello_world` / `hello_world_main.c`, ereditato dal progetto originale, per mantenere CMake, firmware e configurazione Wokwi coerenti senza modificare il codice.
 
 ## Come aprire un esercizio
 
@@ -55,6 +40,7 @@ Il firmware unificato deve essere rigenerato dopo le modifiche. Su GitHub non ve
 
 ## Materiale di consultazione
 
+- [Manuale interattivo ESP-IDF e FreeRTOS](docs/Manuale_API_ESP32_FreeRTOS.html) · Scarica il file da GitHub e aprilo nel browser per usare la ricerca o stamparlo. Include schede API, una guida alle ISR e alle notifiche, e la tabella di `eSetBits` con l’esempio del parcheggio.
 - [Riferimento API in Markdown](docs/Riferimento_API_ESP32_FreeRTOS.md)
 - [Riferimento API in PDF](docs/Riferimento_API_ESP32_FreeRTOS.pdf)
 - [Modello per registrare una prova](docs/registro_prova_template.md)

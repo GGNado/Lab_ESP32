@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = "cmake-build-debug-esp-idf/merged-binary.bin"
+elf = "cmake-build-debug-esp-idf/parcheggio.elf"

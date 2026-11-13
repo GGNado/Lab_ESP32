@@ -60,6 +60,11 @@ table:has(th:nth-child(3)) td:nth-child(2){width:24%}
 .source{margin:.45rem 0 0;font-size:.78rem}
 .muted,#status{color:var(--muted);font-size:.88rem}
 .extra,.reading-key,.sources{margin:1rem 0;padding:1rem;background:var(--wash);border:1px solid var(--line);border-radius:.4rem}
+.pwm-wave{margin:.85rem 0}
+.pwm-wave figcaption{margin-bottom:.35rem;color:var(--muted);font-size:.88rem}
+.pwm-wave th,.pwm-wave td{text-align:center;width:auto!important}
+.pwm-wave td:nth-child(6){border-left:2px solid var(--line)}
+.pwm-wave .pwm-high{background:#d8efe6;color:#154d3e;font-weight:750}
 .extra h3,.reading-key h2,.sources h2{margin:0 0 .4rem;font-size:1.15rem}
 .reading-key table{max-width:54rem}
 .index{display:none}
@@ -90,7 +95,8 @@ table:has(th:nth-child(3)) td:nth-child(2){width:24%}
   .chapter[hidden],.api[hidden],.extra[hidden],.reading-key[hidden]{display:block!important}
   .chapter{padding-top:1rem}
   .api{padding:.6rem .7rem;margin-bottom:.55rem;border-radius:0;break-inside:avoid;box-shadow:none!important}
-  #guida-interrupt-notifiche .api{break-inside:auto}
+  #guida-interrupt-notifiche .api,#pwm .api{break-inside:auto}
+  #pwm figure,#pwm pre{break-inside:avoid}
   #guida-interrupt-notifiche pre{break-inside:avoid}
   .api h3{font-size:12pt}
   .api h4{font-size:9.2pt;margin:.55rem 0 .15rem}
@@ -115,20 +121,20 @@ table:has(th:nth-child(3)) td:nth-child(2){width:24%}
   <a class="brand" href="#inizio">ESP32-S3 / Riferimento API</a>
   <div class="search-box">
     <label class="sr-only" for="cerca">Cerca funzione, tipo o parola chiave</label>
-    <input id="cerca" type="search" placeholder="Cerca una funzione, ad es. xTaskNotify" autocomplete="off">
+    <input id="cerca" type="search" placeholder="Cerca PWM, ISR o una funzione" autocomplete="off">
     <button id="stampa" type="button">Stampa</button>
   </div>
 </header>
 <div class="layout">
-<nav class="sidebar" aria-label="Indice delle funzioni"><div class="nav-group"><a class="nav-title" href="#guida-interrupt-notifiche">Interrupt e notifiche</a><ul><li><a href="#flusso-interrupt">Dal pulsante al task</a></li><li><a href="#quale-notifica">Quale notifica scegliere</a></li><li><a href="#tabella-esetbits">Tabella di eSetBits</a></li></ul></div><div class="nav-group"><a class="nav-title" href="#gpio">GPIO</a><ul><li><a href="#gpio_config"><code>gpio_config</code></a></li><li><a href="#gpio_get_level"><code>gpio_get_level</code></a></li><li><a href="#gpio_pulldown_dis"><code>gpio_pulldown_dis</code></a></li><li><a href="#gpio_pulldown_en"><code>gpio_pulldown_en</code></a></li><li><a href="#gpio_pullup_dis"><code>gpio_pullup_dis</code></a></li><li><a href="#gpio_pullup_en"><code>gpio_pullup_en</code></a></li><li><a href="#gpio_reset_pin"><code>gpio_reset_pin</code></a></li><li><a href="#gpio_set_direction"><code>gpio_set_direction</code></a></li><li><a href="#gpio_set_level"><code>gpio_set_level</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#interrupt">Interrupt GPIO</a><ul><li><a href="#gpio_install_isr_service"><code>gpio_install_isr_service</code></a></li><li><a href="#gpio_intr_disable"><code>gpio_intr_disable</code></a></li><li><a href="#gpio_intr_enable"><code>gpio_intr_enable</code></a></li><li><a href="#gpio_isr_handler_add"><code>gpio_isr_handler_add</code></a></li><li><a href="#gpio_isr_handler_remove"><code>gpio_isr_handler_remove</code></a></li><li><a href="#gpio_set_intr_type"><code>gpio_set_intr_type</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#task">Task</a><ul><li><a href="#app_main"><code>app_main</code></a></li><li><a href="#taskYIELD"><code>taskYIELD</code></a></li><li><a href="#vTaskDelete"><code>vTaskDelete</code></a></li><li><a href="#xTaskCreate"><code>xTaskCreate</code></a></li><li><a href="#xTaskCreatePinnedToCore"><code>xTaskCreatePinnedToCore</code></a></li><li><a href="#xTaskGetCurrentTaskHandle"><code>xTaskGetCurrentTaskHandle</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#tempo">Tempo e attese</a><ul><li><a href="#esp_timer_get_time"><code>esp_timer_get_time</code></a></li><li><a href="#pdMS_TO_TICKS"><code>pdMS_TO_TICKS</code></a></li><li><a href="#vTaskDelay"><code>vTaskDelay</code></a></li><li><a href="#xTaskDelayUntil"><code>xTaskDelayUntil</code></a></li><li><a href="#xTaskGetTickCount"><code>xTaskGetTickCount</code></a></li><li><a href="#xTaskGetTickCountFromISR"><code>xTaskGetTickCountFromISR</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#notifiche">Notifiche ai task</a><ul><li><a href="#portYIELD_FROM_ISR"><code>portYIELD_FROM_ISR</code></a></li><li><a href="#ulTaskNotifyTake"><code>ulTaskNotifyTake</code></a></li><li><a href="#vTaskNotifyGiveFromISR"><code>vTaskNotifyGiveFromISR</code></a></li><li><a href="#xTaskNotify"><code>xTaskNotify</code></a></li><li><a href="#xTaskNotifyFromISR"><code>xTaskNotifyFromISR</code></a></li><li><a href="#xTaskNotifyGive"><code>xTaskNotifyGive</code></a></li><li><a href="#xTaskNotifyWait"><code>xTaskNotifyWait</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#code">Code</a><ul><li><a href="#vQueueDelete"><code>vQueueDelete</code></a></li><li><a href="#xQueueCreate"><code>xQueueCreate</code></a></li><li><a href="#xQueueOverwrite"><code>xQueueOverwrite</code></a></li><li><a href="#xQueueReceive"><code>xQueueReceive</code></a></li><li><a href="#xQueueSend"><code>xQueueSend</code></a></li><li><a href="#xQueueSendFromISR"><code>xQueueSendFromISR</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#errori">Errori e stampe</a><ul><li><a href="#configASSERT"><code>configASSERT</code></a></li><li><a href="#esp_err_to_name"><code>esp_err_to_name</code></a></li><li><a href="#ESP_ERROR_CHECK"><code>ESP_ERROR_CHECK</code></a></li><li><a href="#printf"><code>printf</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#moduli">Funzioni del laboratorio</a><ul><li><a href="#led_init"><code>led_init</code></a></li><li><a href="#led_set"><code>led_set</code></a></li><li><a href="#pulsante_abilita_interrupt"><code>pulsante_abilita_interrupt</code></a></li><li><a href="#pulsante_init"><code>pulsante_init</code></a></li><li><a href="#pulsante_is_pressed"><code>pulsante_is_pressed</code></a></li><li><a href="#pulsante_just_pressed"><code>pulsante_just_pressed</code></a></li><li><a href="#pulsante_to_string"><code>pulsante_to_string</code></a></li></ul></div></nav>
+<nav class="sidebar" aria-label="Indice delle funzioni"><div class="nav-group"><a class="nav-title" href="#guida-interrupt-notifiche">Interrupt e notifiche</a><ul><li><a href="#flusso-interrupt">Dal pulsante al task</a></li><li><a href="#quale-notifica">Quale notifica scegliere</a></li><li><a href="#tabella-esetbits">Tabella di eSetBits</a></li></ul></div><div class="nav-group"><a class="nav-title" href="#gpio">GPIO</a><ul><li><a href="#gpio_config"><code>gpio_config</code></a></li><li><a href="#gpio_get_level"><code>gpio_get_level</code></a></li><li><a href="#gpio_pulldown_dis"><code>gpio_pulldown_dis</code></a></li><li><a href="#gpio_pulldown_en"><code>gpio_pulldown_en</code></a></li><li><a href="#gpio_pullup_dis"><code>gpio_pullup_dis</code></a></li><li><a href="#gpio_pullup_en"><code>gpio_pullup_en</code></a></li><li><a href="#gpio_reset_pin"><code>gpio_reset_pin</code></a></li><li><a href="#gpio_set_direction"><code>gpio_set_direction</code></a></li><li><a href="#gpio_set_level"><code>gpio_set_level</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#interrupt">Interrupt GPIO</a><ul><li><a href="#gpio_install_isr_service"><code>gpio_install_isr_service</code></a></li><li><a href="#gpio_intr_disable"><code>gpio_intr_disable</code></a></li><li><a href="#gpio_intr_enable"><code>gpio_intr_enable</code></a></li><li><a href="#gpio_isr_handler_add"><code>gpio_isr_handler_add</code></a></li><li><a href="#gpio_isr_handler_remove"><code>gpio_isr_handler_remove</code></a></li><li><a href="#gpio_set_intr_type"><code>gpio_set_intr_type</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#task">Task</a><ul><li><a href="#app_main"><code>app_main</code></a></li><li><a href="#taskYIELD"><code>taskYIELD</code></a></li><li><a href="#vTaskDelete"><code>vTaskDelete</code></a></li><li><a href="#xTaskCreate"><code>xTaskCreate</code></a></li><li><a href="#xTaskCreatePinnedToCore"><code>xTaskCreatePinnedToCore</code></a></li><li><a href="#xTaskGetCurrentTaskHandle"><code>xTaskGetCurrentTaskHandle</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#tempo">Tempo e attese</a><ul><li><a href="#esp_timer_get_time"><code>esp_timer_get_time</code></a></li><li><a href="#pdMS_TO_TICKS"><code>pdMS_TO_TICKS</code></a></li><li><a href="#vTaskDelay"><code>vTaskDelay</code></a></li><li><a href="#xTaskDelayUntil"><code>xTaskDelayUntil</code></a></li><li><a href="#xTaskGetTickCount"><code>xTaskGetTickCount</code></a></li><li><a href="#xTaskGetTickCountFromISR"><code>xTaskGetTickCountFromISR</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#notifiche">Notifiche ai task</a><ul><li><a href="#portYIELD_FROM_ISR"><code>portYIELD_FROM_ISR</code></a></li><li><a href="#ulTaskNotifyTake"><code>ulTaskNotifyTake</code></a></li><li><a href="#vTaskNotifyGiveFromISR"><code>vTaskNotifyGiveFromISR</code></a></li><li><a href="#xTaskNotify"><code>xTaskNotify</code></a></li><li><a href="#xTaskNotifyFromISR"><code>xTaskNotifyFromISR</code></a></li><li><a href="#xTaskNotifyGive"><code>xTaskNotifyGive</code></a></li><li><a href="#xTaskNotifyWait"><code>xTaskNotifyWait</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#code">Code</a><ul><li><a href="#vQueueDelete"><code>vQueueDelete</code></a></li><li><a href="#xQueueCreate"><code>xQueueCreate</code></a></li><li><a href="#xQueueOverwrite"><code>xQueueOverwrite</code></a></li><li><a href="#xQueueReceive"><code>xQueueReceive</code></a></li><li><a href="#xQueueSend"><code>xQueueSend</code></a></li><li><a href="#xQueueSendFromISR"><code>xQueueSendFromISR</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#errori">Errori e stampe</a><ul><li><a href="#configASSERT"><code>configASSERT</code></a></li><li><a href="#esp_err_to_name"><code>esp_err_to_name</code></a></li><li><a href="#ESP_ERROR_CHECK"><code>ESP_ERROR_CHECK</code></a></li><li><a href="#printf"><code>printf</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#moduli">Funzioni del laboratorio</a><ul><li><a href="#led_init"><code>led_init</code></a></li><li><a href="#led_set"><code>led_set</code></a></li><li><a href="#pulsante_abilita_interrupt"><code>pulsante_abilita_interrupt</code></a></li><li><a href="#pulsante_init"><code>pulsante_init</code></a></li><li><a href="#pulsante_is_pressed"><code>pulsante_is_pressed</code></a></li><li><a href="#pulsante_just_pressed"><code>pulsante_just_pressed</code></a></li><li><a href="#pulsante_to_string"><code>pulsante_to_string</code></a></li></ul></div><div class="nav-group"><a class="nav-title" href="#pwm">PWM e LEDC</a><ul><li><a href="#pwm-fondamenti">Periodo, frequenza e duty cycle</a></li><li><a href="#pwm-risoluzione">Risoluzione e scelta della frequenza</a></li><li><a href="#pwm-ledc-esempio">Configurare LEDC e misurare in Wokwi</a></li><li><a href="#pwm-motore">Dal LED al motore del rover</a></li><li><a href="#ledc_timer_config"><code>ledc_timer_config</code></a></li><li><a href="#ledc_channel_config"><code>ledc_channel_config</code></a></li><li><a href="#ledc_set_duty_and_update"><code>ledc_set_duty_and_update</code></a></li><li><a href="#ledc-set-update">Impostare il duty con due chiamate</a></li><li><a href="#ledc_stop"><code>ledc_stop</code></a></li></ul></div></nav>
 <main id="contenuto">
 <header class="intro">
   <div class="eyebrow">ESP32-S3 · ESP-IDF 6.1 · C</div>
   <h1>Manuale delle API<br>ESP-IDF e FreeRTOS</h1>
   <p>Riferimento per gli esercizi del laboratorio. Ogni scheda mostra firma, significato dei parametri, tipo di ritorno e valori da controllare.</p>
-  <p id="status" role="status" aria-live="polite">54 schede disponibili.</p>
+  <p id="status" role="status" aria-live="polite">63 schede disponibili.</p>
 </header>
-<details class="index" open><summary>Indice delle funzioni</summary><div class="index-grid"><div><h3><a href="#guida-interrupt-notifiche">Interrupt e notifiche</a></h3><ul><li><a href="#flusso-interrupt">Dal pulsante al task</a></li><li><a href="#quale-notifica">Quale notifica scegliere</a></li><li><a href="#tabella-esetbits">Tabella di eSetBits</a></li></ul></div><div><h3><a href="#gpio">GPIO</a></h3><ul><li><a href="#gpio_config"><code>gpio_config</code></a></li><li><a href="#gpio_get_level"><code>gpio_get_level</code></a></li><li><a href="#gpio_pulldown_dis"><code>gpio_pulldown_dis</code></a></li><li><a href="#gpio_pulldown_en"><code>gpio_pulldown_en</code></a></li><li><a href="#gpio_pullup_dis"><code>gpio_pullup_dis</code></a></li><li><a href="#gpio_pullup_en"><code>gpio_pullup_en</code></a></li><li><a href="#gpio_reset_pin"><code>gpio_reset_pin</code></a></li><li><a href="#gpio_set_direction"><code>gpio_set_direction</code></a></li><li><a href="#gpio_set_level"><code>gpio_set_level</code></a></li></ul></div><div><h3><a href="#interrupt">Interrupt GPIO</a></h3><ul><li><a href="#gpio_install_isr_service"><code>gpio_install_isr_service</code></a></li><li><a href="#gpio_intr_disable"><code>gpio_intr_disable</code></a></li><li><a href="#gpio_intr_enable"><code>gpio_intr_enable</code></a></li><li><a href="#gpio_isr_handler_add"><code>gpio_isr_handler_add</code></a></li><li><a href="#gpio_isr_handler_remove"><code>gpio_isr_handler_remove</code></a></li><li><a href="#gpio_set_intr_type"><code>gpio_set_intr_type</code></a></li></ul></div><div><h3><a href="#task">Task</a></h3><ul><li><a href="#app_main"><code>app_main</code></a></li><li><a href="#taskYIELD"><code>taskYIELD</code></a></li><li><a href="#vTaskDelete"><code>vTaskDelete</code></a></li><li><a href="#xTaskCreate"><code>xTaskCreate</code></a></li><li><a href="#xTaskCreatePinnedToCore"><code>xTaskCreatePinnedToCore</code></a></li><li><a href="#xTaskGetCurrentTaskHandle"><code>xTaskGetCurrentTaskHandle</code></a></li></ul></div><div><h3><a href="#tempo">Tempo e attese</a></h3><ul><li><a href="#esp_timer_get_time"><code>esp_timer_get_time</code></a></li><li><a href="#pdMS_TO_TICKS"><code>pdMS_TO_TICKS</code></a></li><li><a href="#vTaskDelay"><code>vTaskDelay</code></a></li><li><a href="#xTaskDelayUntil"><code>xTaskDelayUntil</code></a></li><li><a href="#xTaskGetTickCount"><code>xTaskGetTickCount</code></a></li><li><a href="#xTaskGetTickCountFromISR"><code>xTaskGetTickCountFromISR</code></a></li></ul></div><div><h3><a href="#notifiche">Notifiche ai task</a></h3><ul><li><a href="#portYIELD_FROM_ISR"><code>portYIELD_FROM_ISR</code></a></li><li><a href="#ulTaskNotifyTake"><code>ulTaskNotifyTake</code></a></li><li><a href="#vTaskNotifyGiveFromISR"><code>vTaskNotifyGiveFromISR</code></a></li><li><a href="#xTaskNotify"><code>xTaskNotify</code></a></li><li><a href="#xTaskNotifyFromISR"><code>xTaskNotifyFromISR</code></a></li><li><a href="#xTaskNotifyGive"><code>xTaskNotifyGive</code></a></li><li><a href="#xTaskNotifyWait"><code>xTaskNotifyWait</code></a></li></ul></div><div><h3><a href="#code">Code</a></h3><ul><li><a href="#vQueueDelete"><code>vQueueDelete</code></a></li><li><a href="#xQueueCreate"><code>xQueueCreate</code></a></li><li><a href="#xQueueOverwrite"><code>xQueueOverwrite</code></a></li><li><a href="#xQueueReceive"><code>xQueueReceive</code></a></li><li><a href="#xQueueSend"><code>xQueueSend</code></a></li><li><a href="#xQueueSendFromISR"><code>xQueueSendFromISR</code></a></li></ul></div><div><h3><a href="#errori">Errori e stampe</a></h3><ul><li><a href="#configASSERT"><code>configASSERT</code></a></li><li><a href="#esp_err_to_name"><code>esp_err_to_name</code></a></li><li><a href="#ESP_ERROR_CHECK"><code>ESP_ERROR_CHECK</code></a></li><li><a href="#printf"><code>printf</code></a></li></ul></div><div><h3><a href="#moduli">Funzioni del laboratorio</a></h3><ul><li><a href="#led_init"><code>led_init</code></a></li><li><a href="#led_set"><code>led_set</code></a></li><li><a href="#pulsante_abilita_interrupt"><code>pulsante_abilita_interrupt</code></a></li><li><a href="#pulsante_init"><code>pulsante_init</code></a></li><li><a href="#pulsante_is_pressed"><code>pulsante_is_pressed</code></a></li><li><a href="#pulsante_just_pressed"><code>pulsante_just_pressed</code></a></li><li><a href="#pulsante_to_string"><code>pulsante_to_string</code></a></li></ul></div></div></details>
+<details class="index" open><summary>Indice delle funzioni</summary><div class="index-grid"><div><h3><a href="#guida-interrupt-notifiche">Interrupt e notifiche</a></h3><ul><li><a href="#flusso-interrupt">Dal pulsante al task</a></li><li><a href="#quale-notifica">Quale notifica scegliere</a></li><li><a href="#tabella-esetbits">Tabella di eSetBits</a></li></ul></div><div><h3><a href="#gpio">GPIO</a></h3><ul><li><a href="#gpio_config"><code>gpio_config</code></a></li><li><a href="#gpio_get_level"><code>gpio_get_level</code></a></li><li><a href="#gpio_pulldown_dis"><code>gpio_pulldown_dis</code></a></li><li><a href="#gpio_pulldown_en"><code>gpio_pulldown_en</code></a></li><li><a href="#gpio_pullup_dis"><code>gpio_pullup_dis</code></a></li><li><a href="#gpio_pullup_en"><code>gpio_pullup_en</code></a></li><li><a href="#gpio_reset_pin"><code>gpio_reset_pin</code></a></li><li><a href="#gpio_set_direction"><code>gpio_set_direction</code></a></li><li><a href="#gpio_set_level"><code>gpio_set_level</code></a></li></ul></div><div><h3><a href="#interrupt">Interrupt GPIO</a></h3><ul><li><a href="#gpio_install_isr_service"><code>gpio_install_isr_service</code></a></li><li><a href="#gpio_intr_disable"><code>gpio_intr_disable</code></a></li><li><a href="#gpio_intr_enable"><code>gpio_intr_enable</code></a></li><li><a href="#gpio_isr_handler_add"><code>gpio_isr_handler_add</code></a></li><li><a href="#gpio_isr_handler_remove"><code>gpio_isr_handler_remove</code></a></li><li><a href="#gpio_set_intr_type"><code>gpio_set_intr_type</code></a></li></ul></div><div><h3><a href="#task">Task</a></h3><ul><li><a href="#app_main"><code>app_main</code></a></li><li><a href="#taskYIELD"><code>taskYIELD</code></a></li><li><a href="#vTaskDelete"><code>vTaskDelete</code></a></li><li><a href="#xTaskCreate"><code>xTaskCreate</code></a></li><li><a href="#xTaskCreatePinnedToCore"><code>xTaskCreatePinnedToCore</code></a></li><li><a href="#xTaskGetCurrentTaskHandle"><code>xTaskGetCurrentTaskHandle</code></a></li></ul></div><div><h3><a href="#tempo">Tempo e attese</a></h3><ul><li><a href="#esp_timer_get_time"><code>esp_timer_get_time</code></a></li><li><a href="#pdMS_TO_TICKS"><code>pdMS_TO_TICKS</code></a></li><li><a href="#vTaskDelay"><code>vTaskDelay</code></a></li><li><a href="#xTaskDelayUntil"><code>xTaskDelayUntil</code></a></li><li><a href="#xTaskGetTickCount"><code>xTaskGetTickCount</code></a></li><li><a href="#xTaskGetTickCountFromISR"><code>xTaskGetTickCountFromISR</code></a></li></ul></div><div><h3><a href="#notifiche">Notifiche ai task</a></h3><ul><li><a href="#portYIELD_FROM_ISR"><code>portYIELD_FROM_ISR</code></a></li><li><a href="#ulTaskNotifyTake"><code>ulTaskNotifyTake</code></a></li><li><a href="#vTaskNotifyGiveFromISR"><code>vTaskNotifyGiveFromISR</code></a></li><li><a href="#xTaskNotify"><code>xTaskNotify</code></a></li><li><a href="#xTaskNotifyFromISR"><code>xTaskNotifyFromISR</code></a></li><li><a href="#xTaskNotifyGive"><code>xTaskNotifyGive</code></a></li><li><a href="#xTaskNotifyWait"><code>xTaskNotifyWait</code></a></li></ul></div><div><h3><a href="#code">Code</a></h3><ul><li><a href="#vQueueDelete"><code>vQueueDelete</code></a></li><li><a href="#xQueueCreate"><code>xQueueCreate</code></a></li><li><a href="#xQueueOverwrite"><code>xQueueOverwrite</code></a></li><li><a href="#xQueueReceive"><code>xQueueReceive</code></a></li><li><a href="#xQueueSend"><code>xQueueSend</code></a></li><li><a href="#xQueueSendFromISR"><code>xQueueSendFromISR</code></a></li></ul></div><div><h3><a href="#errori">Errori e stampe</a></h3><ul><li><a href="#configASSERT"><code>configASSERT</code></a></li><li><a href="#esp_err_to_name"><code>esp_err_to_name</code></a></li><li><a href="#ESP_ERROR_CHECK"><code>ESP_ERROR_CHECK</code></a></li><li><a href="#printf"><code>printf</code></a></li></ul></div><div><h3><a href="#moduli">Funzioni del laboratorio</a></h3><ul><li><a href="#led_init"><code>led_init</code></a></li><li><a href="#led_set"><code>led_set</code></a></li><li><a href="#pulsante_abilita_interrupt"><code>pulsante_abilita_interrupt</code></a></li><li><a href="#pulsante_init"><code>pulsante_init</code></a></li><li><a href="#pulsante_is_pressed"><code>pulsante_is_pressed</code></a></li><li><a href="#pulsante_just_pressed"><code>pulsante_just_pressed</code></a></li><li><a href="#pulsante_to_string"><code>pulsante_to_string</code></a></li></ul></div><div><h3><a href="#pwm">PWM e LEDC</a></h3><ul><li><a href="#pwm-fondamenti">Periodo, frequenza e duty cycle</a></li><li><a href="#pwm-risoluzione">Risoluzione e scelta della frequenza</a></li><li><a href="#pwm-ledc-esempio">Configurare LEDC e misurare in Wokwi</a></li><li><a href="#pwm-motore">Dal LED al motore del rover</a></li><li><a href="#ledc_timer_config"><code>ledc_timer_config</code></a></li><li><a href="#ledc_channel_config"><code>ledc_channel_config</code></a></li><li><a href="#ledc_set_duty_and_update"><code>ledc_set_duty_and_update</code></a></li><li><a href="#ledc-set-update">Impostare il duty con due chiamate</a></li><li><a href="#ledc_stop"><code>ledc_stop</code></a></li></ul></div></div></details>
 <section class="reading-key" aria-label="Convenzioni">
 <h2>Convenzioni</h2>
 <p>Le firme usano nomi descrittivi per i parametri. Per le macro, il tipo mostrato è quello del valore che puoi usare nel codice. Includi <code>freertos/FreeRTOS.h</code> prima di <code>task.h</code> o <code>queue.h</code>.</p>
@@ -197,7 +203,7 @@ if (xTaskNotifyWait(0, UINT32_MAX, &amp;eventi, portMAX_DELAY) == pdTRUE) {
 </section>
 <section class="chapter" id="gpio"><h2>GPIO</h2><article class="api" id="gpio_config" data-name="gpio_config">
 <div class="api-head"><h3><code>gpio_config</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Applica modalità, pull-up, pull-down e tipo di interrupt ai GPIO selezionati.</p>
+<p class="summary">Applica modalità, pull-up, pull-down e tipo di interrupt ai GPIO selezionati. Usa una maschera per applicare la stessa configurazione a più pin. Per i pulsanti del parcheggio imposti l’ingresso con pull-up, così il pin vale 1 a riposo e 0 quando il pulsante lo collega a massa.</p>
 <pre class="signature"><code>esp_err_t gpio_config(const gpio_config_t *config);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione del modulo.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>config</code></td><td><code>const gpio_config_t *</code></td><td>Indirizzo della struttura di configurazione. La maschera seleziona i GPIO da modificare.</td></tr></tbody></table>
@@ -212,7 +218,7 @@ if (xTaskNotifyWait(0, UINT32_MAX, &amp;eventi, portMAX_DELAY) == pdTRUE) {
 esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La maschera usa i numeri fisici dei GPIO. Un enum che identifica un pulsante può avere valori diversi. Nel CMake aggiungi <code>esp_driver_gpio</code> a <code>PRIV_REQUIRES</code>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_get_level" data-name="gpio_get_level">
 <div class="api-head"><h3><code>gpio_get_level</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Legge il livello digitale presente sul pin al momento della chiamata.</p>
+<p class="summary">Legge il livello digitale presente sul pin al momento della chiamata. Con un pulsante collegato a massa e pull-up attivo, uno 0 indica che la linea è bassa. Per confermare la pressione dopo un interrupt, confronta le letture secondo la strategia di debounce del task.</p>
 <pre class="signature"><code>int gpio_get_level(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Lettura GPIO. Restituisce subito.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO con ingresso digitale abilitato.</td></tr></tbody></table>
@@ -220,7 +226,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>bool premuto = (gpio_get_level(GPIO_NUM_4) == 0);</code></pre><p class="note">Con un pulsante collegato a GND e pull-up attivo, <code>0</code> significa premuto. Con ingresso disabilitato la lettura restituisce <code>0</code>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_set_level" data-name="gpio_set_level">
 <div class="api-head"><h3><code>gpio_set_level</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Imposta il livello di uscita del GPIO.</p>
+<p class="summary">Imposta il livello di uscita del GPIO. Su un’uscita digitale, 0 porta il pin a livello basso e 1 a livello alto. Per il LED attivo alto del parcheggio, questi livelli corrispondono a spento e acceso.</p>
 <pre class="signature"><code>esp_err_t gpio_set_level(gpio_num_t pin, uint32_t livello);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Configurazione o task che pilota le uscite.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO di uscita.</td></tr><tr><td><code>livello</code></td><td><code>uint32_t</code></td><td>Usa 0 per basso e 1 per alto.</td></tr></tbody></table>
@@ -228,7 +234,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_set_level(GPIO_NUM_16, 1);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_reset_pin" data-name="gpio_reset_pin">
 <div class="api-head"><h3><code>gpio_reset_pin</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Ripristina il pin come GPIO, abilita il pull-up e disabilita ingresso e uscita.</p>
+<p class="summary">Ripristina il pin come GPIO, abilita il pull-up e disabilita ingresso e uscita. Usala quando vuoi riportare il pin a uno stato GPIO noto prima di riconfigurarlo. Dopo il ripristino, imposta la direzione e le resistenze richieste dal circuito.</p>
 <pre class="signature"><code>esp_err_t gpio_reset_pin(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da ripristinare.</td></tr></tbody></table>
@@ -236,7 +242,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_reset_pin(GPIO_NUM_16);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_set_direction" data-name="gpio_set_direction">
 <div class="api-head"><h3><code>gpio_set_direction</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Imposta la modalità di ingresso o uscita del GPIO.</p>
+<p class="summary">Imposta la modalità di ingresso o uscita del GPIO. Per esempio, configura un pin come ingresso prima di leggere un pulsante e come uscita prima di pilotare un LED con <code>gpio_set_level()</code>.</p>
 <pre class="signature"><code>esp_err_t gpio_set_direction(gpio_num_t pin, gpio_mode_t modo);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da configurare.</td></tr><tr><td><code>modo</code></td><td><code>gpio_mode_t</code></td><td>Per esempio GPIO_MODE_INPUT, GPIO_MODE_OUTPUT oppure GPIO_MODE_INPUT_OUTPUT.</td></tr></tbody></table>
@@ -244,7 +250,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_set_direction(GPIO_NUM_16, GPIO_MODE_OUTPUT);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_pullup_en" data-name="gpio_pullup_en">
 <div class="api-head"><h3><code>gpio_pullup_en</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Abilita il pull-up interno del pin.</p>
+<p class="summary">Abilita il pull-up interno del pin. La resistenza interna porta l’ingresso verso 1 quando il circuito lo lascia libero. È la configurazione del pulsante attivo basso collegato a massa.</p>
 <pre class="signature"><code>esp_err_t gpio_pullup_en(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da configurare.</td></tr></tbody></table>
@@ -252,7 +258,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_pullup_en(GPIO_NUM_4);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_pullup_dis" data-name="gpio_pullup_dis">
 <div class="api-head"><h3><code>gpio_pullup_dis</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Disabilita il pull-up interno del pin.</p>
+<p class="summary">Disabilita il pull-up interno del pin. Rimuove il richiamo interno verso 1. Il livello a riposo dipenderà dal circuito collegato, ad esempio da una resistenza esterna.</p>
 <pre class="signature"><code>esp_err_t gpio_pullup_dis(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da configurare.</td></tr></tbody></table>
@@ -260,7 +266,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_pullup_dis(GPIO_NUM_4);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_pulldown_en" data-name="gpio_pulldown_en">
 <div class="api-head"><h3><code>gpio_pulldown_en</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Abilita il pull-down interno del pin.</p>
+<p class="summary">Abilita il pull-down interno del pin. La resistenza interna porta l’ingresso verso 0 quando il circuito lo lascia libero. Puoi usarla con un pulsante collegato all’alimentazione che porta il pin a 1 quando viene premuto.</p>
 <pre class="signature"><code>esp_err_t gpio_pulldown_en(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da configurare.</td></tr></tbody></table>
@@ -268,7 +274,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_pulldown_en(GPIO_NUM_4);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_pulldown_dis" data-name="gpio_pulldown_dis">
 <div class="api-head"><h3><code>gpio_pulldown_dis</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Disabilita il pull-down interno del pin.</p>
+<p class="summary">Disabilita il pull-down interno del pin. Rimuove il richiamo interno verso 0. Il circuito esterno o la configurazione degli altri pull determinano il livello a riposo.</p>
 <pre class="signature"><code>esp_err_t gpio_pulldown_dis(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da configurare.</td></tr></tbody></table>
@@ -276,7 +282,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_pulldown_dis(GPIO_NUM_4);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article></section><section class="chapter" id="interrupt"><h2>Interrupt GPIO</h2><article class="api" id="gpio_install_isr_service" data-name="gpio_install_isr_service">
 <div class="api-head"><h3><code>gpio_install_isr_service</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Installa il servizio condiviso che permette di registrare una callback per singolo GPIO.</p>
+<p class="summary">Installa il servizio condiviso che permette di registrare una callback per singolo GPIO. Installa il gestore comune prima di registrare le ISR dei singoli pin. Per due pulsanti installi il servizio una volta e poi registri un handler per ciascun GPIO.</p>
 <pre class="signature"><code>esp_err_t gpio_install_isr_service(int flags);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione, prima di registrare le callback.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>flags</code></td><td><code>int</code></td><td>Flag ESP_INTR_FLAG_* combinabili. Usa 0 per la configurazione predefinita.</td></tr></tbody></table>
@@ -284,7 +290,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_install_isr_service(0);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_set_intr_type" data-name="gpio_set_intr_type">
 <div class="api-head"><h3><code>gpio_set_intr_type</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Seleziona il fronte o livello che genera l’interrupt GPIO.</p>
+<p class="summary">Seleziona il fronte o livello che genera l’interrupt GPIO. Per un pulsante con pull-up, <code>GPIO_INTR_NEGEDGE</code> intercetta il passaggio da 1 a 0. Usa <code>GPIO_INTR_ANYEDGE</code> per ricevere anche il rilascio e controllare entrambi i cambi di stato nel task.</p>
 <pre class="signature"><code>esp_err_t gpio_set_intr_type(gpio_num_t pin, gpio_int_type_t tipo);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o riconfigurazione.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO di ingresso.</td></tr><tr><td><code>tipo</code></td><td><code>gpio_int_type_t</code></td><td>GPIO_INTR_NEGEDGE per 1 → 0, GPIO_INTR_POSEDGE per 0 → 1, GPIO_INTR_ANYEDGE per entrambi.</td></tr></tbody></table>
@@ -292,7 +298,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_set_intr_type(GPIO_NUM_4, GPIO_INTR_NEGEDGE);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_isr_handler_add" data-name="gpio_isr_handler_add">
 <div class="api-head"><h3><code>gpio_isr_handler_add</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Registra la callback del pin. In ESP-IDF 6.1, la registrazione abilita anche l’interrupt su quel GPIO.</p>
+<p class="summary">Registra la callback del pin. In ESP-IDF 6.1, la registrazione abilita anche l’interrupt su quel GPIO. Collega una funzione e un puntatore di contesto a un pin. Nel parcheggio passi un contesto distinto per Entrata e Uscita, così la stessa ISR può impostare il bit giusto.</p>
 <pre class="signature"><code>esp_err_t gpio_isr_handler_add(
     gpio_num_t pin,
     gpio_isr_t callback,
@@ -304,7 +310,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <h4>Esempio</h4><pre><code>esp_err_t esito = gpio_isr_handler_add(GPIO_NUM_4, pulsante_isr, handle);</code></pre><p class="note">Se <code>arg</code> contiene l’handle di un task, passa il valore <code>handle</code>. Il driver lo consegna a <code>pulsante_isr</code>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_isr_handler_remove" data-name="gpio_isr_handler_remove">
 <div class="api-head"><h3><code>gpio_isr_handler_remove</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Rimuove la callback del pin e disabilita il relativo interrupt.</p>
+<p class="summary">Rimuove la callback del pin e disabilita il relativo interrupt. Usala quando il pin smette di usare quella callback, per esempio prima di liberare il contesto che le avevi passato.</p>
 <pre class="signature"><code>esp_err_t gpio_isr_handler_remove(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Riconfigurazione o rilascio del modulo.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO di cui rimuovere la callback.</td></tr></tbody></table>
@@ -312,7 +318,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_intr_enable" data-name="gpio_intr_enable">
 <div class="api-head"><h3><code>gpio_intr_enable</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Abilita l’interrupt del pin. La configurazione del tipo e la callback rimangono registrate.</p>
+<p class="summary">Abilita l’interrupt del pin. La configurazione del tipo e la callback rimangono registrate. Usala per riattivare gli eventi GPIO dopo una sospensione temporanea. Il pin riprende a generare interrupt secondo il fronte o livello già impostato.</p>
 <pre class="signature"><code>esp_err_t gpio_intr_enable(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Controllo del GPIO durante la vita del modulo.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da controllare.</td></tr></tbody></table>
@@ -320,7 +326,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="gpio_intr_disable" data-name="gpio_intr_disable">
 <div class="api-head"><h3><code>gpio_intr_disable</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Disabilita l’interrupt del pin. La configurazione del tipo e la callback rimangono registrate.</p>
+<p class="summary">Disabilita l’interrupt del pin. La configurazione del tipo e la callback rimangono registrate. Usala per sospendere temporaneamente le notifiche hardware di quel GPIO. Puoi riprendere con <code>gpio_intr_enable()</code>.</p>
 <pre class="signature"><code>esp_err_t gpio_intr_disable(gpio_num_t pin);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>driver/gpio.h</code></dd></div><div><dt>Contesto</dt><dd>Controllo del GPIO durante la vita del modulo.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pin</code></td><td><code>gpio_num_t</code></td><td>GPIO da controllare.</td></tr></tbody></table>
@@ -328,7 +334,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 <p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Riferimento ufficiale ↗</a></p>
 </article></section><section class="chapter" id="task"><h2>Task</h2><article class="api" id="app_main" data-name="app_main">
 <div class="api-head"><h3><code>app_main</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Punto di ingresso dell’applicazione, chiamato dal task principale di ESP-IDF.</p>
+<p class="summary">Punto di ingresso dell’applicazione, chiamato dal task principale di ESP-IDF. Qui inizializzi le periferiche e crei gli eventuali task applicativi. Nell’esercizio PWM la funzione può terminare appena LEDC è configurato. La periferica continua a generare gli impulsi in hardware.</p>
 <pre class="signature"><code>void app_main(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>Funzione definita nel progetto</code></dd></div><div><dt>Contesto</dt><dd>Avvio dell’applicazione.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -339,7 +345,7 @@ esp_err_t esito = gpio_config(&amp;config);</code></pre><p class="note">La masch
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskCreate" data-name="xTaskCreate">
 <div class="api-head"><h3><code>xTaskCreate</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Crea un task e lo rende disponibile allo scheduler.</p>
+<p class="summary">Crea un task e lo rende disponibile allo scheduler. Fornisci la funzione del task, lo stack, la priorità e l’argomento da passare. Se ti serve notificare quel task in seguito, chiedi a FreeRTOS di scrivere il suo handle nel parametro di uscita.</p>
 <pre class="signature"><code>BaseType_t xTaskCreate(
     TaskFunction_t funzione,
     const char *nome,
@@ -357,7 +363,7 @@ BaseType_t esito = xTaskCreate(
 );</code></pre><p class="note">Il task può partire subito. Prepara i dati passati in <code>arg</code> prima della chiamata. Usa <code>&amp;handle</code> qui, poi <code>handle</code> per riferirti al task.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskCreatePinnedToCore" data-name="xTaskCreatePinnedToCore">
 <div class="api-head"><h3><code>xTaskCreatePinnedToCore</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Crea un task indicando su quale core può essere eseguito.</p>
+<p class="summary">Crea un task indicando su quale core può essere eseguito. Oltre ai parametri di <code>xTaskCreate()</code>, puoi indicare un core preciso. L’affinità dice allo scheduler dove può eseguire il task. La priorità decide quando è candidato a girare.</p>
 <pre class="signature"><code>BaseType_t xTaskCreatePinnedToCore(
     TaskFunction_t funzione,
     const char *nome,
@@ -375,7 +381,7 @@ BaseType_t esito = xTaskCreate(
 );</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskGetCurrentTaskHandle" data-name="xTaskGetCurrentTaskHandle">
 <div class="api-head"><h3><code>xTaskGetCurrentTaskHandle</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Recupera l’handle del task chiamante.</p>
+<p class="summary">Recupera l’handle del task chiamante. Serve quando il task in esecuzione deve fornire la propria identità a un altro componente, per esempio per indicare a una ISR chi notificare.</p>
 <pre class="signature"><code>TaskHandle_t xTaskGetCurrentTaskHandle(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -383,7 +389,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>TaskHandle_t mio_handle = xTaskGetCurrentTaskHandle();</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="vTaskDelete" data-name="vTaskDelete">
 <div class="api-head"><h3><code>vTaskDelete</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Elimina un task. Libera esplicitamente le risorse applicative che gli appartengono prima di eliminarlo.</p>
+<p class="summary">Elimina un task. Libera esplicitamente le risorse applicative che gli appartengono prima di eliminarlo. Passa un handle per eliminare quel task oppure <code>NULL</code> per eliminare il chiamante. Se altre parti del programma conservano l’handle, coordina la loro disattivazione prima di eliminare il task.</p>
 <pre class="signature"><code>void vTaskDelete(TaskHandle_t task);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>task</code></td><td><code>TaskHandle_t</code></td><td>Handle del task da eliminare. NULL indica il task chiamante.</td></tr></tbody></table>
@@ -391,7 +397,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>vTaskDelete(NULL);</code></pre><p class="note">Una funzione avviata con <code>xTaskCreate</code> deve restare in esecuzione oppure terminare con <code>vTaskDelete</code>. <code>app_main</code> può ritornare.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="taskYIELD" data-name="taskYIELD">
 <div class="api-head"><h3><code>taskYIELD</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Richiede allo scheduler di scegliere di nuovo quale task eseguire.</p>
+<p class="summary">Richiede allo scheduler di scegliere di nuovo quale task eseguire. Il task chiamante resta pronto. Lo scheduler può scegliere un altro task idoneo oppure far proseguire subito il chiamante.</p>
 <pre class="signature"><code>void taskYIELD();</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task. Il task chiamante rimane pronto.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -399,7 +405,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>taskYIELD();</code></pre><p class="note">Per introdurre un intervallo temporale usa <a href="#vTaskDelay"><code>vTaskDelay</code></a>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article></section><section class="chapter" id="tempo"><h2>Tempo e attese</h2><article class="api" id="pdMS_TO_TICKS" data-name="pdMS_TO_TICKS">
 <div class="api-head"><h3><code>pdMS_TO_TICKS</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Converte un intervallo da millisecondi in tick.</p>
+<p class="summary">Converte un intervallo da millisecondi in tick. Usala quando un’API FreeRTOS accetta un’attesa in tick. Con un tick di 10 ms, 100 ms diventano 10 tick e 1 ms viene arrotondato a zero.</p>
 <pre class="signature"><code>pdMS_TO_TICKS(ms)</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h</code></dd></div><div><dt>Contesto</dt><dd>Conversione, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ms</code></td><td><code>Intervallo in millisecondi</code></td><td>Durata da convertire secondo la frequenza dei tick del progetto.</td></tr></tbody></table>
@@ -407,7 +413,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>const TickType_t periodo = pdMS_TO_TICKS(20);</code></pre><p class="note">A <code>CONFIG_FREERTOS_HZ = 100</code>, un tick vale 10 ms. Controlla la frequenza in <code>sdkconfig</code>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskGetTickCount" data-name="xTaskGetTickCount">
 <div class="api-head"><h3><code>xTaskGetTickCount</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Legge il contatore dei tick di FreeRTOS.</p>
+<p class="summary">Legge il contatore dei tick di FreeRTOS. Salva una lettura all’inizio di un’operazione e sottraila alla lettura corrente per misurare il tempo trascorso in tick.</p>
 <pre class="signature"><code>TickType_t xTaskGetTickCount(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -415,7 +421,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>TickType_t trascorsi = xTaskGetTickCount() - istante;</code></pre><p class="note">La sottrazione tra valori <code>TickType_t</code> gestisce il rollover quando l’intervallo trascorso è inferiore a un giro del contatore.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskGetTickCountFromISR" data-name="xTaskGetTickCountFromISR">
 <div class="api-head"><h3><code>xTaskGetTickCountFromISR</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Legge il contatore dei tick dal contesto di un interrupt.</p>
+<p class="summary">Legge il contatore dei tick dal contesto di un interrupt. Usala quando devi registrare il momento di un fronte direttamente nell’handler GPIO. Il valore è espresso nei tick del kernel.</p>
 <pre class="signature"><code>TickType_t xTaskGetTickCountFromISR(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>ISR, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -423,7 +429,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>TickType_t istante = xTaskGetTickCountFromISR();</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="vTaskDelay" data-name="vTaskDelay">
 <div class="api-head"><h3><code>vTaskDelay</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Con un’attesa positiva mette il task in attesa a partire dalla chiamata.</p>
+<p class="summary">Con un’attesa positiva mette il task in attesa a partire dalla chiamata. Per esempio, nel fade del LED puoi aspettare 100 ms tra due variazioni del duty. Durante l’attesa il task è bloccato e LEDC continua a produrre il PWM in hardware.</p>
 <pre class="signature"><code>void vTaskDelay(TickType_t attesa);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task. L’istante effettivo di esecuzione dipende dallo scheduler.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>attesa</code></td><td><code>TickType_t</code></td><td>Durata dell’attesa in tick. Converti i millisecondi con pdMS_TO_TICKS.</td></tr></tbody></table>
@@ -431,7 +437,7 @@ BaseType_t esito = xTaskCreate(
 <h4>Esempio</h4><pre><code>vTaskDelay(pdMS_TO_TICKS(30));</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskDelayUntil" data-name="xTaskDelayUntil">
 <div class="api-head"><h3><code>xTaskDelayUntil</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Programma il prossimo risveglio relativo all’istante previsto del giro precedente.</p>
+<p class="summary">Programma il prossimo risveglio relativo all’istante previsto del giro precedente. Usala per un lavoro periodico, come il ciclo di controllo del rover. Conserva la variabile che contiene il riferimento temporale tra un giro e il successivo.</p>
 <pre class="signature"><code>BaseType_t xTaskDelayUntil(TickType_t *riferimento, TickType_t periodo);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Alla fine del giro di un task periodico.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>riferimento</code></td><td><code>TickType_t *</code></td><td>Indirizzo del tick di riferimento, inizializzato una volta prima del ciclo. La funzione lo aggiorna.</td></tr><tr><td><code>periodo</code></td><td><code>TickType_t</code></td><td>Incremento in tick tra due risvegli programmati. Deve essere maggiore di zero.</td></tr></tbody></table>
@@ -445,7 +451,7 @@ for (;;) {
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="esp_timer_get_time" data-name="esp_timer_get_time">
 <div class="api-head"><h3><code>esp_timer_get_time</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Legge il tempo trascorso dall’inizializzazione di ESP Timer.</p>
+<p class="summary">Legge il tempo trascorso dall’inizializzazione di ESP Timer. Il valore è in microsecondi. Sottrai due letture per misurare la durata del tuo codice quando la risoluzione in tick è troppo grossolana.</p>
 <pre class="signature"><code>int64_t esp_timer_get_time(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>esp_timer.h</code></dd></div><div><dt>Contesto</dt><dd>Task e ISR. Lettura senza attesa.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -455,7 +461,7 @@ for (;;) {
 int64_t durata_us = esp_timer_get_time() - inizio_us;</code></pre><p class="note">Header <code>esp_timer.h</code>. Dipendenza CMake <code>esp_timer</code>. Le due letture includono anche eventuali pause del task.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/esp_timer.html">Riferimento ufficiale ↗</a></p>
 </article></section><section class="chapter" id="notifiche"><h2>Notifiche ai task</h2><article class="api" id="xTaskNotifyGive" data-name="xTaskNotifyGive">
 <div class="api-head"><h3><code>xTaskNotifyGive</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Incrementa il valore di notifica del destinatario. Se il destinatario è in attesa, lo rende pronto.</p>
+<p class="summary">Incrementa il valore di notifica del destinatario. Se il destinatario è in attesa, lo rende pronto. Usala da un task per segnalare un evento a un altro task, per esempio un errore al gestore del LED giallo. Il destinatario può aspettare il segnale con <code>ulTaskNotifyTake()</code>.</p>
 <pre class="signature"><code>BaseType_t xTaskNotifyGive(TaskHandle_t task);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>task</code></td><td><code>TaskHandle_t</code></td><td>Handle del task destinatario.</td></tr></tbody></table>
@@ -463,7 +469,7 @@ int64_t durata_us = esp_timer_get_time() - inizio_us;</code></pre><p class="note
 <h4>Esempio</h4><pre><code>xTaskNotifyGive(handle);</code></pre><p class="note">Abbinala a <a href="#ulTaskNotifyTake"><code>ulTaskNotifyTake</code></a> quando usi il valore come contatore.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="ulTaskNotifyTake" data-name="ulTaskNotifyTake">
 <div class="api-head"><h3><code>ulTaskNotifyTake</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Attende un contatore di notifica diverso da zero e lo consuma secondo il parametro azzera.</p>
+<p class="summary">Attende un contatore di notifica diverso da zero e lo consuma secondo il parametro azzera. Con <code>pdTRUE</code> svuoti il contatore dopo averne letto il valore. Con <code>pdFALSE</code> consumi un evento alla volta. Il ritorno zero indica che l’attesa è scaduta senza eventi disponibili.</p>
 <pre class="signature"><code>uint32_t ulTaskNotifyTake(BaseType_t azzera, TickType_t attesa);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>Task destinatario. Può bloccare.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>azzera</code></td><td><code>BaseType_t</code></td><td>pdTRUE azzera il contatore. pdFALSE lo decrementa di uno.</td></tr><tr><td><code>attesa</code></td><td><code>TickType_t</code></td><td>Tempo massimo in tick con contatore zero. 0 prova subito.</td></tr></tbody></table>
@@ -471,7 +477,7 @@ int64_t durata_us = esp_timer_get_time() - inizio_us;</code></pre><p class="note
 <h4>Esempio</h4><pre><code>uint32_t notifiche = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskNotify" data-name="xTaskNotify">
 <div class="api-head"><h3><code>xTaskNotify</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Notifica un task e può aggiornare il suo valore di notifica a 32 bit.</p>
+<p class="summary">Notifica un task e può aggiornare il suo valore di notifica a 32 bit. L’azione selezionata decide come interpretare il valore. Con <code>eSetBits</code> puoi accumulare in una maschera gli eventi che il destinatario dovrà controllare.</p>
 <pre class="signature"><code>BaseType_t xTaskNotify(
     TaskHandle_t task,
     uint32_t valore,
@@ -483,7 +489,7 @@ int64_t durata_us = esp_timer_get_time() - inizio_us;</code></pre><p class="note
 <h4>Esempio</h4><pre><code>BaseType_t esito = xTaskNotify(handle, valore, eSetValueWithoutOverwrite);</code></pre><p class="note">Le versioni senza indice usano lo slot 0. Lo slot conserva un valore e uno stato pendente. L’azione decide cosa accade a una notifica precedente.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskNotifyWait" data-name="xTaskNotifyWait">
 <div class="api-head"><h3><code>xTaskNotifyWait</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Attende una notifica pendente e legge il valore. Anche un valore ricevuto pari a zero può rappresentare una notifica valida.</p>
+<p class="summary">Attende una notifica pendente e legge il valore. Anche un valore ricevuto pari a zero può rappresentare una notifica valida. Il task può bloccarsi finché arriva un evento. Nel parcheggio la chiamata copia in una variabile la maschera da esaminare e azzera i bit dello slot secondo la maschera di uscita.</p>
 <pre class="signature"><code>BaseType_t xTaskNotifyWait(
     uint32_t cancella_ingresso,
     uint32_t cancella_uscita,
@@ -499,7 +505,7 @@ if (xTaskNotifyWait(0, UINT32_MAX, &amp;valore, pdMS_TO_TICKS(100)) == pdPASS) {
 }</code></pre><p class="note">Controlla l’esito della chiamata prima di interpretare <code>valore</code>.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="vTaskNotifyGiveFromISR" data-name="vTaskNotifyGiveFromISR">
 <div class="api-head"><h3><code>vTaskNotifyGiveFromISR</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Incrementa il contatore di notifica da una ISR.</p>
+<p class="summary">Incrementa il contatore di notifica da una ISR. Usala dall’handler quando vuoi incrementare un contatore e svegliare il task che aspetta con <code>ulTaskNotifyTake()</code>. Controlla il flag di rischedulazione prima di uscire dall’ISR.</p>
 <pre class="signature"><code>void vTaskNotifyGiveFromISR(TaskHandle_t task, BaseType_t *svegliato);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>ISR, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>task</code></td><td><code>TaskHandle_t</code></td><td>Handle del destinatario.</td></tr><tr><td><code>svegliato</code></td><td><code>BaseType_t *</code></td><td>Indirizzo di un flag inizializzato a pdFALSE. FreeRTOS può impostarlo a pdTRUE quando sblocca un task a priorità superiore. NULL se il flag non serve.</td></tr></tbody></table>
@@ -511,7 +517,7 @@ if (svegliato == pdTRUE) {
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xTaskNotifyFromISR" data-name="xTaskNotifyFromISR">
 <div class="api-head"><h3><code>xTaskNotifyFromISR</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Invia una notifica con un valore da una ISR. Applica le stesse azioni di xTaskNotify.</p>
+<p class="summary">Invia una notifica con un valore da una ISR. Applica le stesse azioni di xTaskNotify. Nel parcheggio l’ISR usa <code>eSetBits</code> per segnalare quale pulsante controllare. Un parametro di uscita indica se occorre chiedere una rischedulazione.</p>
 <pre class="signature"><code>BaseType_t xTaskNotifyFromISR(
     TaskHandle_t task,
     uint32_t valore,
@@ -528,7 +534,7 @@ if (svegliato == pdTRUE) {
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="portYIELD_FROM_ISR" data-name="portYIELD_FROM_ISR">
 <div class="api-head"><h3><code>portYIELD_FROM_ISR</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Richiede una rivalutazione dello scheduling all’uscita dall’ISR.</p>
+<p class="summary">Richiede una rivalutazione dello scheduling all’uscita dall’ISR. Usala quando la chiamata <code>FromISR</code> imposta il flag di rischedulazione. Il task reso pronto potrà così essere scelto dallo scheduler al termine dell’interrupt.</p>
 <pre class="signature"><code>void portYIELD_FROM_ISR();</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/task.h</code></dd></div><div><dt>Contesto</dt><dd>ISR. Usala quando l’API FromISR segnala un task a priorità superiore.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -538,7 +544,7 @@ if (svegliato == pdTRUE) {
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><aside class="extra"><h3 id="azioni-notifica">Azioni di xTaskNotify</h3><table><thead><tr><th scope="col">Azione</th><th scope="col">Effetto sullo slot</th><th scope="col">Esito e conseguenze</th></tr></thead><tbody><tr><td><code>eSetValueWithoutOverwrite</code></td><td>Scrive il valore se lo slot ha zero notifiche pendenti.</td><td>pdFAIL se una notifica è già pendente.</td></tr><tr><td><code>eSetValueWithOverwrite</code></td><td>Scrive il nuovo valore, anche con una notifica pendente.</td><td>pdPASS. Il vecchio valore viene sostituito.</td></tr><tr><td><code>eSetBits</code></td><td>Applica OR bit a bit tra valore attuale e maschera passata.</td><td>pdPASS. Eventi ripetuti con lo stesso bit si uniscono.</td></tr><tr><td><code>eIncrement</code></td><td>Incrementa il valore di uno.</td><td>pdPASS. Il parametro valore viene ignorato.</td></tr><tr><td><code>eNoAction</code></td><td>Rende la notifica pendente e mantiene il valore attuale.</td><td>pdPASS. Il parametro valore viene ignorato.</td></tr></tbody></table></aside></section><section class="chapter" id="code"><h2>Code</h2><article class="api" id="xQueueCreate" data-name="xQueueCreate">
 <div class="api-head"><h3><code>xQueueCreate</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Alloca una coda che copia gli elementi al suo interno.</p>
+<p class="summary">Alloca una coda che copia gli elementi al suo interno. Indica quanti elementi devono stare nella coda e quanti byte occupa ciascun elemento. Per trasmettere <code>ComandoRover</code> per valore, la dimensione è <code>sizeof(ComandoRover)</code>.</p>
 <pre class="signature"><code>QueueHandle_t xQueueCreate(UBaseType_t capacita, UBaseType_t dimensione);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/queue.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o creazione a runtime.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>capacita</code></td><td><code>UBaseType_t</code></td><td>Numero massimo di elementi.</td></tr><tr><td><code>dimensione</code></td><td><code>UBaseType_t</code></td><td>Byte per elemento. Usa sizeof(TipoElemento).</td></tr></tbody></table>
@@ -546,7 +552,7 @@ if (svegliato == pdTRUE) {
 <h4>Esempio</h4><pre><code>QueueHandle_t coda = xQueueCreate(8, sizeof(Evento));</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xQueueSend" data-name="xQueueSend">
 <div class="api-head"><h3><code>xQueueSend</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Copia un elemento in fondo alla coda.</p>
+<p class="summary">Copia un elemento in fondo alla coda. Usala da un task quando vuoi conservare l’ordine degli elementi inviati. Se la coda è piena, la chiamata può aspettare che si liberi un posto fino al timeout scelto.</p>
 <pre class="signature"><code>BaseType_t xQueueSend(
     QueueHandle_t coda,
     const void *elemento,
@@ -558,7 +564,7 @@ if (svegliato == pdTRUE) {
 <h4>Esempio</h4><pre><code>BaseType_t esito = xQueueSend(coda, &amp;evento, 0);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xQueueSendFromISR" data-name="xQueueSendFromISR">
 <div class="api-head"><h3><code>xQueueSendFromISR</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Copia un elemento in fondo alla coda da una ISR.</p>
+<p class="summary">Copia un elemento in fondo alla coda da una ISR. Usala quando l’interrupt deve inviare un dato al task. Se la coda è piena, l’invio fallisce immediatamente e puoi controllare il valore di ritorno.</p>
 <pre class="signature"><code>BaseType_t xQueueSendFromISR(
     QueueHandle_t coda,
     const void *elemento,
@@ -574,7 +580,7 @@ if (svegliato == pdTRUE) {
 }</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xQueueReceive" data-name="xQueueReceive">
 <div class="api-head"><h3><code>xQueueReceive</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Rimuove il primo elemento dalla coda e ne copia il contenuto nel buffer.</p>
+<p class="summary">Rimuove il primo elemento dalla coda e ne copia il contenuto nel buffer. Passa un buffer grande quanto un elemento. Se la coda è vuota, il task può aspettare un invio fino al timeout scelto.</p>
 <pre class="signature"><code>BaseType_t xQueueReceive(
     QueueHandle_t coda,
     void *destinazione,
@@ -589,7 +595,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 }</code></pre><p class="note">Con una coda vuota, un’attesa finita può terminare per arrivo di un dato o per timeout. <code>portMAX_DELAY</code> significa attesa indefinita nella configurazione del laboratorio.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="xQueueOverwrite" data-name="xQueueOverwrite">
 <div class="api-head"><h3><code>xQueueOverwrite</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Inserisce un elemento, sostituendo quello già presente.</p>
+<p class="summary">Inserisce un elemento, sostituendo quello già presente. Usala con una coda lunga uno quando conta soltanto il dato più recente. Nel rover, un comando appena arrivato può sostituire quello precedente ancora in coda.</p>
 <pre class="signature"><code>BaseType_t xQueueOverwrite(QueueHandle_t coda, const void *elemento);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/queue.h</code></dd></div><div><dt>Contesto</dt><dd>Task produttore, senza attesa.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>coda</code></td><td><code>QueueHandle_t</code></td><td>Handle di una coda con capacità esattamente 1.</td></tr><tr><td><code>elemento</code></td><td><code>const void *</code></td><td>Indirizzo dell’elemento da copiare.</td></tr></tbody></table>
@@ -597,7 +603,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 <h4>Esempio</h4><pre><code>xQueueOverwrite(coda_ultimo_valore, &amp;evento);</code></pre><p class="note">Usala quando serve conservare il dato più recente. Un elemento sostituito prima della ricezione viene perso.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="vQueueDelete" data-name="vQueueDelete">
 <div class="api-head"><h3><code>vQueueDelete</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Elimina la coda e libera la memoria allocata da xQueueCreate.</p>
+<p class="summary">Elimina la coda e libera la memoria allocata da xQueueCreate. Usala quando i produttori e i consumatori hanno finito di usare la coda. Dopo la chiamata, ogni parte del programma deve smettere di usare quell’handle.</p>
 <pre class="signature"><code>void vQueueDelete(QueueHandle_t coda);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h · freertos/queue.h</code></dd></div><div><dt>Contesto</dt><dd>Rilascio, dopo che produttori e consumatori hanno smesso di usare la coda.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>coda</code></td><td><code>QueueHandle_t</code></td><td>Handle della coda da eliminare.</td></tr></tbody></table>
@@ -605,7 +611,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 <h4>Esempio</h4><pre><code>vQueueDelete(coda);</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article><aside class="extra"><p>La coda copia i byte dell’elemento. Se l’elemento contiene un puntatore, copia l’indirizzo. La memoria puntata deve restare valida per chi riceve.</p></aside></section><section class="chapter" id="errori"><h2>Errori e stampe</h2><article class="api" id="ESP_ERROR_CHECK" data-name="ESP_ERROR_CHECK">
 <div class="api-head"><h3><code>ESP_ERROR_CHECK</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Controlla che l’esito sia ESP_OK. In configurazione standard, stampa la diagnostica e chiama abort() in caso di errore.</p>
+<p class="summary">Controlla che l’esito sia ESP_OK. In configurazione standard, stampa la diagnostica e chiama abort() in caso di errore. È adatta all’inizializzazione quando il programma deve fermarsi se una periferica non parte. Nel laboratorio PWM, il fallimento della configurazione può quindi causare un riavvio, secondo la configurazione del panic handler.</p>
 <pre class="signature"><code>ESP_ERROR_CHECK(espressione)</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>esp_err.h</code></dd></div><div><dt>Contesto</dt><dd>Inizializzazione o operazioni il cui errore è fatale.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>espressione</code></td><td><code>esp_err_t</code></td><td>Espressione che produce un codice ESP-IDF.</td></tr></tbody></table>
@@ -613,7 +619,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 <h4>Esempio</h4><pre><code>ESP_ERROR_CHECK(led_init());</code></pre><p class="note">Per propagare un errore al chiamante, salva l’esito e restituiscilo. Il comportamento della macro dipende dalla configurazione degli assert.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-guides/error-handling.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="esp_err_to_name" data-name="esp_err_to_name">
 <div class="api-head"><h3><code>esp_err_to_name</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Converte un codice di errore nel suo nome.</p>
+<p class="summary">Converte un codice di errore nel suo nome. Usala per scrivere un errore leggibile nei log quando vuoi gestirlo tu. Per esempio, puoi visualizzare <code>ESP_ERR_INVALID_ARG</code> insieme al nome della funzione che l’ha restituito.</p>
 <pre class="signature"><code>const char *esp_err_to_name(esp_err_t errore);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>esp_err.h</code></dd></div><div><dt>Contesto</dt><dd>Diagnostica.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>errore</code></td><td><code>esp_err_t</code></td><td>Codice ESP-IDF da descrivere.</td></tr></tbody></table>
@@ -621,7 +627,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 <h4>Esempio</h4><pre><code>printf(&quot;Errore: %s\n&quot;, esp_err_to_name(esito));</code></pre><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-guides/error-handling.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="printf" data-name="printf">
 <div class="api-head"><h3><code>printf</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Formatta e scrive caratteri sullo standard output.</p>
+<p class="summary">Formatta e scrive caratteri sullo standard output. Nel laboratorio la usi per stampare dati come il tick di una pressione. Scegli lo specificatore in base al tipo e chiudi la riga con <code>\n</code> per tenere leggibile la console.</p>
 <pre class="signature"><code>int printf(const char *formato, ...);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>stdio.h</code></dd></div><div><dt>Contesto</dt><dd>Diagnostica in un task. La scrittura può influire sui tempi misurati.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>formato</code></td><td><code>const char *</code></td><td>Stringa con specificatori di formato.</td></tr><tr><td><code>…</code></td><td><code>Argomenti variabili</code></td><td>Valori da stampare nei tipi richiesti dal formato.</td></tr></tbody></table>
@@ -630,7 +636,7 @@ if (xQueueReceive(coda, &amp;evento, pdMS_TO_TICKS(100)) == pdPASS) {
 printf(&quot;Premuto: %s\n&quot;, premuto ? &quot;true&quot; : &quot;false&quot;);</code></pre><p class="note">Per un <code>int64_t</code> usa <code>"%" PRId64</code> con <code>&lt;inttypes.h&gt;</code>. Per un <code>uint32_t</code> usa <code>PRIu32</code>.</p><p class="source"><a href="https://pubs.opengroup.org/onlinepubs/9799919799/functions/printf.html">Riferimento ufficiale ↗</a></p>
 </article><article class="api" id="configASSERT" data-name="configASSERT">
 <div class="api-head"><h3><code>configASSERT</code></h3><span class="tag">Macro</span></div>
-<p class="summary">Verifica un’assunzione se gli assert sono abilitati.</p>
+<p class="summary">Verifica un’assunzione se gli assert sono abilitati. Usala per verificare un’invariante del programma, per esempio che un handle sia valido prima di passarlo a un task. La configurazione degli assert determina cosa accade se la condizione fallisce.</p>
 <pre class="signature"><code>configASSERT(condizione)</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>freertos/FreeRTOS.h</code></dd></div><div><dt>Contesto</dt><dd>Diagnostica FreeRTOS.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>condizione</code></td><td><code>Espressione logica</code></td><td>Assunzione da controllare durante lo sviluppo.</td></tr></tbody></table>
@@ -639,7 +645,7 @@ printf(&quot;Premuto: %s\n&quot;, premuto ? &quot;true&quot; : &quot;false&quot;
 configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata prima dell’assert. Così l’operazione avviene anche nelle build con assert disabilitati.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">Riferimento ufficiale ↗</a></p>
 </article></section><section class="chapter" id="moduli"><h2>Funzioni del laboratorio</h2><article class="api" id="led_init" data-name="led_init">
 <div class="api-head"><h3><code>led_init</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Configura le uscite dei LED e le porta a livello basso.</p>
+<p class="summary">Configura le uscite dei LED e le porta a livello basso. Chiamala all’avvio prima di comandare i LED del modulo. Con il cablaggio attivo alto del laboratorio, il livello basso iniziale li tiene spenti.</p>
 <pre class="signature"><code>esp_err_t led_init(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>led.h</code></dd></div><div><dt>Contesto</dt><dd>Avvio, prima di usare led_set.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -647,7 +653,7 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 <h4>Esempio</h4><pre><code>ESP_ERROR_CHECK(led_init());</code></pre>
 </article><article class="api" id="led_set" data-name="led_set">
 <div class="api-head"><h3><code>led_set</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Imposta lo stato del LED selezionato nel segnalatore a tempo.</p>
+<p class="summary">Imposta lo stato del LED selezionato nel segnalatore a tempo. Il chiamante indica quale LED aggiornare e se accenderlo o spegnerlo. Il modulo traduce la scelta nel GPIO e nel livello del circuito.</p>
 <pre class="signature"><code>esp_err_t led_set(Led led, bool stato);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>led.h</code></dd></div><div><dt>Contesto</dt><dd>Task che controlla le uscite, dopo led_init.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>led</code></td><td><code>Led</code></td><td>Identificatore del LED nel modulo.</td></tr><tr><td><code>stato</code></td><td><code>bool</code></td><td>true accende, false spegne.</td></tr></tbody></table>
@@ -655,7 +661,7 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 <h4>Esempio</h4><pre><code>ESP_ERROR_CHECK(led_set(LED_VERDE, true));</code></pre><p class="note">Questa firma appartiene al segnalatore a tempo. Nel nuovo esercizio puoi scegliere un’interfaccia diversa.</p>
 </article><article class="api" id="pulsante_init" data-name="pulsante_init">
 <div class="api-head"><h3><code>pulsante_init</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Configura gli ingressi del modulo pulsanti e il pull-up previsto dal circuito.</p>
+<p class="summary">Configura gli ingressi del modulo pulsanti e il pull-up previsto dal circuito. Chiamala prima di leggere i pulsanti o abilitare gli interrupt. Il pull-up tiene il pin alto a riposo nel circuito del laboratorio.</p>
 <pre class="signature"><code>esp_err_t pulsante_init(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>pulsante.h</code></dd></div><div><dt>Contesto</dt><dd>Avvio.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -663,7 +669,7 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 <h4>Esempio</h4><pre><code>ESP_ERROR_CHECK(pulsante_init());</code></pre>
 </article><article class="api" id="pulsante_is_pressed" data-name="pulsante_is_pressed">
 <div class="api-head"><h3><code>pulsante_is_pressed</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Nella versione del parcheggio, rileva una nuova pressione confermata del tasto selezionato.</p>
+<p class="summary">Nella versione del parcheggio, rileva una nuova pressione confermata del tasto selezionato. Nel task del parcheggio la richiami per il pulsante indicato dalla notifica. La funzione usa le letture del pin e lo stato precedente per decidere se segnalare una nuova pressione.</p>
 <pre class="signature"><code>bool pulsante_is_pressed(Pulsante pulsante);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>pulsante.h</code></dd></div><div><dt>Contesto</dt><dd>Task di lettura. La verifica del cambio di stato può attendere per il debounce.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pulsante</code></td><td><code>Pulsante</code></td><td>Identificatore del tasto nella versione del parcheggio.</td></tr></tbody></table>
@@ -671,7 +677,7 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 <h4>Esempio</h4><pre><code>bool nuova_entrata = pulsante_is_pressed(PULSANTE_ENTRATA);</code></pre><p class="note">Nel segnalatore a tempo la variante <code>pulsante_is_pressed(void)</code> legge il livello corrente. <code>pulsante_just_pressed(void)</code> rileva invece una nuova pressione.</p>
 </article><article class="api" id="pulsante_just_pressed" data-name="pulsante_just_pressed">
 <div class="api-head"><h3><code>pulsante_just_pressed</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Nella prova a polling del segnalatore, conferma un cambio di stato dopo letture consecutive coerenti.</p>
+<p class="summary">Nella prova a polling del segnalatore, conferma un cambio di stato dopo letture consecutive coerenti. La richiami durante il polling. Quando i campioni confermano una transizione verso lo stato premuto, ottieni l’evento da inoltrare al segnalatore.</p>
 <pre class="signature"><code>bool pulsante_just_pressed(void);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>pulsante.h</code></dd></div><div><dt>Contesto</dt><dd>Task di polling. Chiamala una volta per campione.</dd></div></dl>
 <h4>Parametri</h4><p class="muted">Nessun parametro.</p>
@@ -681,7 +687,7 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 }</code></pre>
 </article><article class="api" id="pulsante_abilita_interrupt" data-name="pulsante_abilita_interrupt">
 <div class="api-head"><h3><code>pulsante_abilita_interrupt</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Nel segnalatore a tempo installa il servizio GPIO, imposta il fronte di discesa e registra la callback.</p>
+<p class="summary">Nel segnalatore a tempo installa il servizio GPIO, imposta il fronte di discesa e registra la callback. Chiamala dopo aver inizializzato il pin e creato il task destinatario. L’handle passato permette all’ISR di notificare quel task al fronte configurato.</p>
 <pre class="signature"><code>esp_err_t pulsante_abilita_interrupt(TaskHandle_t task);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>pulsante.h</code></dd></div><div><dt>Contesto</dt><dd>Avvio, dopo l’inizializzazione del GPIO e la creazione del task.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>task</code></td><td><code>TaskHandle_t</code></td><td>Handle del task che riceverà le notifiche della ISR.</td></tr></tbody></table>
@@ -689,13 +695,151 @@ configASSERT(esito == pdPASS);</code></pre><p class="note">Esegui la chiamata pr
 <h4>Esempio</h4><pre><code>ESP_ERROR_CHECK(pulsante_abilita_interrupt(handle));</code></pre>
 </article><article class="api" id="pulsante_to_string" data-name="pulsante_to_string">
 <div class="api-head"><h3><code>pulsante_to_string</code></h3><span class="tag">Funzione</span></div>
-<p class="summary">Associa un nome leggibile al pulsante nel parcheggio.</p>
+<p class="summary">Associa un nome leggibile al pulsante nel parcheggio. Serve nei messaggi diagnostici del parcheggio per indicare quale pulsante ha generato l’evento.</p>
 <pre class="signature"><code>const char *pulsante_to_string(Pulsante pulsante);</code></pre>
 <dl class="metadata"><div><dt>Header</dt><dd><code>pulsante.c</code></dd></div><div><dt>Contesto</dt><dd>Diagnostica interna a pulsante.c. La funzione è static.</dd></div></dl>
 <h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>pulsante</code></td><td><code>Pulsante</code></td><td>Valore enum da rappresentare come testo.</td></tr></tbody></table>
 <h4>Ritorno <code>const char *</code></h4><table><thead><tr><th scope="col">Valore</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>const char *</code></td><td>Stringa letterale come ENTRATA, USCITA o SCONOSCIUTO.</td></tr></tbody></table>
 <h4>Esempio</h4><pre><code>printf(&quot;Hai premuto %s\n&quot;, pulsante_to_string(pulsante));</code></pre>
 </article></section>
+<section class="chapter" id="pwm">
+<h2>PWM e driver LEDC</h2>
+<article class="api" id="pwm-fondamenti" data-name="PWM fondamenti periodo frequenza duty cycle Ton Toff">
+<h3>Periodo, frequenza e duty cycle</h3>
+
+<p><strong>PWM</strong> significa <em>Pulse Width Modulation</em>, modulazione della larghezza dell’impulso. Il GPIO ripete un ciclo tra livello alto e basso. Tenendo fisso il periodo, cambi la durata della parte alta e quindi il duty cycle.</p>
+<table><thead><tr><th scope="col">Grandezza</th><th scope="col">Come si calcola</th><th scope="col">Esempio a 1 kHz e 25%</th></tr></thead><tbody>
+<tr><td>Frequenza <code>f</code></td><td><code>f = 1 / T</code></td><td>1.000 cicli al secondo</td></tr>
+<tr><td>Periodo <code>T</code></td><td><code>T = T_on + T_off</code></td><td>1 ms</td></tr>
+<tr><td>Duty cycle <code>D</code></td><td><code>D = T_on / T</code>, oppure <code>D × 100</code> in percentuale</td><td>0,25, cioè 25%</td></tr>
+<tr><td>Tempi alto e basso</td><td><code>T_on = D × T</code>, <code>T_off = (1 − D) × T</code></td><td>250 µs alto, 750 µs basso</td></tr>
+</tbody></table>
+<figure class="pwm-wave">
+<figcaption>Due periodi allo stesso ritmo. Ogni cella vale un quarto di periodo.</figcaption>
+<table aria-label="Confronto delle forme d’onda PWM"><thead><tr><th scope="col">Duty</th><th scope="col" colspan="4">Primo periodo</th><th scope="col" colspan="4">Secondo periodo</th></tr></thead><tbody>
+<tr><th scope="row">25%</th><td class="pwm-high">H</td><td>L</td><td>L</td><td>L</td><td class="pwm-high">H</td><td>L</td><td>L</td><td>L</td></tr>
+<tr><th scope="row">75%</th><td class="pwm-high">H</td><td class="pwm-high">H</td><td class="pwm-high">H</td><td>L</td><td class="pwm-high">H</td><td class="pwm-high">H</td><td class="pwm-high">H</td><td>L</td></tr>
+</tbody></table>
+</figure>
+<p><strong>H</strong> indica livello alto e <strong>L</strong> livello basso. A 0% il segnale resta basso, a 100% resta alto. A 25% il livello alto è comunque circa 3,3 V. Se idealizzi i livelli a 0 e 3,3 V, la media su un periodo vale <code>3,3 × 0,25 = 0,825 V</code>. L’analizzatore logico vede gli impulsi. Un filtro passa-basso può invece attenuarli e approssimare la media.</p>
+<p>Con un LED attivo alto e una resistenza in serie, il duty cambia per quanto tempo scorre corrente. La resistenza limita la corrente durante ogni impulso. A frequenza sufficiente, l’occhio integra gli impulsi e vede una luminosità più bassa. Il 25% indica la frazione di tempo acceso, mentre la luminosità percepita dipende anche dall’occhio e dal LED.</p>
+
+</article>
+<article class="api" id="pwm-risoluzione" data-name="PWM risoluzione bit conteggi frequenza quantizzazione">
+<h3>Risoluzione e scelta della frequenza</h3>
+
+<p>Con <code>N</code> bit di risoluzione, il periodo è diviso in <code>2^N</code> intervalli. Per convertire un duty in conteggi, calcola <code>round(D × 2^N)</code>. In C, <code>1u &lt;&lt; N</code> calcola <code>2^N</code>.</p>
+<table><thead><tr><th scope="col">Duty</th><th scope="col">A 10 bit</th><th scope="col">Tempo alto a 1 kHz</th></tr></thead><tbody>
+<tr><td>0%</td><td>0</td><td>0 µs</td></tr>
+<tr><td>25%</td><td>256</td><td>250 µs</td></tr>
+<tr><td>50%</td><td>512</td><td>500 µs</td></tr>
+<tr><td>75%</td><td>768</td><td>750 µs</td></tr>
+<tr><td>100%</td><td>1024</td><td>1.000 µs</td></tr>
+</tbody></table>
+<p>Ogni passo a 10 bit vale circa <code>0,098</code> punti percentuali. Il valore <code>1024</code> rappresenta il 100% nella configurazione a 10 bit qui usata. Sull’ESP32-S3, se usi la risoluzione massima del timer, evita <code>2^N</code> perché manda in overflow il contatore del duty.</p>
+<p>Il timer deve contare tutti gli intervalli entro un periodo. A parità di clock sorgente, una frequenza più alta lascia meno tempo per contare e limita la risoluzione disponibile. Se la coppia richiesta non è realizzabile, riduci la frequenza o i bit e controlla il ritorno di <a href="#ledc_timer_config"><code>ledc_timer_config</code></a>.</p>
+<p>Per il LED partiamo da <strong>1 kHz e 10 bit</strong>, una scelta per questo laboratorio. Per un motore scegli la frequenza nel campo ammesso dal driver. Una frequenza più alta può spostare il rumore di commutazione fuori dalla banda udibile, ma può aumentare le perdite di commutazione.</p>
+<p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Frequenza, risoluzione e limiti di LEDC</a></p>
+
+</article>
+<article class="api" id="pwm-ledc-esempio" data-name="PWM LEDC esempio Wokwi ESP32-S3 timer canale analizzatore logico">
+<h3>Configurare LEDC e misurare in Wokwi</h3>
+
+<p>Il <strong>timer LEDC</strong> determina frequenza e risoluzione. Il <strong>canale</strong> usa quel timer, ha il proprio duty e instrada il segnale verso un GPIO. Due canali sullo stesso timer condividono frequenza e risoluzione e possono avere duty diversi. Sull’ESP32-S3 la modalità è <code>LEDC_LOW_SPEED_MODE</code>, anche quando imposti una frequenza alta.</p>
+<p>LEDC genera gli impulsi in hardware dopo la configurazione. Il task aggiorna il duty quando riceve un comando e nel frattempo può attendere una notifica. La frequenza PWM è indipendente dalla frequenza con cui il task cambia duty. Se lo aggiorni ogni 100 ms a 1 kHz, tra due aggiornamenti trascorrono circa 100 periodi.</p>
+<p><strong>Cablaggio del laboratorio.</strong> GPIO16 → resistenza da 220 Ω → anodo del LED. Collega il catodo a GND. Per misurare il segnale aggiungi il canale D0 dell’analizzatore logico su GPIO16 e usa la stessa massa. Nel <code>main/CMakeLists.txt</code> dichiara il driver del componente.</p>
+<pre><code>idf_component_register(SRCS "main.c"
+                       PRIV_REQUIRES esp_driver_ledc)</code></pre>
+<h4>Esempio minimo a 25%</h4>
+<pre id="pwm-esempio-c"><code>#include "driver/ledc.h"
+#include "esp_err.h"
+
+void app_main(void)
+{
+    const ledc_timer_config_t timer = {
+        .speed_mode = LEDC_LOW_SPEED_MODE,
+        .duty_resolution = LEDC_TIMER_10_BIT,
+        .timer_num = LEDC_TIMER_0,
+        .freq_hz = 1000,
+        .clk_cfg = LEDC_AUTO_CLK,
+    };
+    ESP_ERROR_CHECK(ledc_timer_config(&amp;timer));
+
+    const ledc_channel_config_t channel = {
+        .gpio_num = 16,
+        .speed_mode = LEDC_LOW_SPEED_MODE,
+        .channel = LEDC_CHANNEL_0,
+        .intr_type = LEDC_INTR_DISABLE,
+        .timer_sel = LEDC_TIMER_0,
+        .duty = 0,
+        .hpoint = 0,
+    };
+    ESP_ERROR_CHECK(ledc_channel_config(&amp;channel));
+
+    const uint32_t duty_25 = (1u &lt;&lt; 10) / 4u;
+    ESP_ERROR_CHECK(ledc_set_duty(
+        LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, duty_25));
+    ESP_ERROR_CHECK(ledc_update_duty(
+        LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+}</code></pre>
+<p><strong>Verifica.</strong> Misura la distanza tra due fronti di salita consecutivi e la larghezza di un impulso alto. A 25% aspettati circa 1 ms e 250 µs. Ripeti a 75% e cerca circa 1 ms e 750 µs. A 0% l’uscita resta bassa. La traccia VCD dell’analizzatore mostra il segnale digitale anche quando l’effetto sul LED è difficile da valutare a occhio.</p>
+<p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Configurazione LEDC</a> · <a href="https://docs.wokwi.com/guides/logic-analyzer">Analizzatore logico di Wokwi</a></p>
+
+</article>
+<article class="api" id="pwm-motore" data-name="PWM motore DC rover driver ponte H encoder RPM anello aperto">
+<h3>Dal LED al motore del rover</h3>
+
+<p>Il GPIO dell’ESP32 porta il segnale di comando al driver. Il driver usa l’alimentazione del motore per erogare corrente agli avvolgimenti. Un ponte H permette di invertire il verso. Su un driver con ingressi <code>DIR</code> e <code>EN/PWM</code>, il primo seleziona la direzione e il secondo riceve il PWM. Pin, livelli compatibili, massa comune e comportamento allo stop vanno verificati sul datasheet del driver scelto.</p>
+<p>Durante la parte attiva del ciclo il ponte applica la tensione di alimentazione al motore. L’induttanza degli avvolgimenti rende la corrente più continua degli impulsi di tensione. Nella fase inattiva il driver gestisce la ricircolazione della corrente o lascia il motore in folle, secondo il circuito e la modalità. Il comando a 0% può quindi corrispondere a frenata o folle in base al driver.</p>
+<p><strong>Duty e giri al minuto sono grandezze diverse.</strong> A 25% il motore potrebbe anche restare fermo per attrito o carico. In anello aperto scegli il duty e osservi la risposta. In anello chiuso l’encoder misura la velocità e un task corregge il duty per avvicinarsi alla velocità richiesta.</p>
+<p>Nel rover, il timeout del comando decide quando il task deve portare il duty a zero o chiedere lo stato di arresto al driver. L’encoder e la logica del timeout operano a un ritmo scelto dal firmware. LEDC continua a generare il segnale impostato tra due aggiornamenti.</p>
+<p class="source"><a href="https://www.ti.com/document-viewer/lit/html/SLVA980">Comando PWM e direzione nei motori DC con spazzole</a> · <a href="https://www.ti.com/lit/ds/symlink/drv8234.pdf">Esempio di ponte H e regolazione</a></p>
+
+</article>
+<article class="api" id="ledc_timer_config" data-name="ledc_timer_config PWM LEDC">
+<div class="api-head"><h3><code>ledc_timer_config</code></h3><span class="tag">Funzione</span></div>
+<p class="summary">Configura il timer che scandisce il periodo PWM. Chiamala all’avvio per scegliere quale timer LEDC usare, il clock da cui ricava il ritmo, la frequenza PWM e la risoluzione del duty. Nel tuo esercizio il timer 0 scandisce 1.000 periodi al secondo e divide ciascun periodo in 1.024 conteggi. Tutti i canali associati a quel timer condividono frequenza e risoluzione.</p>
+<pre class="signature"><code>esp_err_t ledc_timer_config(const ledc_timer_config_t *timer_conf);</code></pre>
+<dl class="metadata"><div><dt>Header</dt><dd><code>driver/ledc.h</code></dd></div><div><dt>Componente</dt><dd><code>esp_driver_ledc</code></dd></div></dl>
+<h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>timer_conf</code></td><td><code>const ledc_timer_config_t *</code></td><td>Struttura con modalità, ID del timer, frequenza in Hz, risoluzione del duty e clock sorgente.</td></tr></tbody></table><h4>Ritorno <code>esp_err_t</code></h4><table><thead><tr><th scope="col">Valore</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ESP_OK</code></td><td>Configurazione riuscita.</td></tr><tr><td><code>ESP_ERR_INVALID_ARG</code></td><td>Parametro non valido.</td></tr><tr><td><code>ESP_FAIL</code></td><td>Il divisore richiesto dalla coppia frequenza e risoluzione non è disponibile.</td></tr><tr><td><code>ESP_ERR_INVALID_STATE</code></td><td>Richiesta di deconfigurazione con timer non configurato o non in pausa.</td></tr></tbody></table><p class="note">Configura il timer prima di collegargli un canale.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Riferimento LEDC di Espressif</a></p>
+</article>
+<article class="api" id="ledc_channel_config" data-name="ledc_channel_config PWM LEDC">
+<div class="api-head"><h3><code>ledc_channel_config</code></h3><span class="tag">Funzione</span></div>
+<p class="summary">Collega il timer al canale e il canale al GPIO di uscita. Chiamala dopo aver configurato il timer. Nel tuo esercizio, il canale 0 prende il ritmo dal timer 0 e manda il segnale su GPIO16. Il canale stabilisce il duty iniziale e il conteggio a cui comincia l’impulso alto. Con duty iniziale 0 il LED parte spento.</p>
+<pre class="signature"><code>esp_err_t ledc_channel_config(const ledc_channel_config_t *ledc_conf);</code></pre>
+<dl class="metadata"><div><dt>Header</dt><dd><code>driver/ledc.h</code></dd></div><div><dt>Componente</dt><dd><code>esp_driver_ledc</code></dd></div></dl>
+<h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ledc_conf</code></td><td><code>const ledc_channel_config_t *</code></td><td>Struttura con GPIO, modalità, ID del canale, ID del timer, interrupt e valori iniziali di duty e hpoint.</td></tr></tbody></table><h4>Ritorno <code>esp_err_t</code></h4><table><thead><tr><th scope="col">Valore</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ESP_OK</code></td><td>Canale configurato.</td></tr><tr><td><code>ESP_ERR_INVALID_ARG</code></td><td>Parametro non valido.</td></tr></tbody></table><p class="note">Per il LED parti con duty pari a zero e interrupt LEDC disabilitato. L’interrupt GPIO del pulsante si configura a parte.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Riferimento LEDC di Espressif</a></p>
+</article>
+<article class="api" id="ledc_set_duty_and_update" data-name="ledc_set_duty_and_update PWM LEDC">
+<div class="api-head"><h3><code>ledc_set_duty_and_update</code></h3><span class="tag">Funzione</span></div>
+<p class="summary">Imposta il duty di un canale configurato e applica l’aggiornamento con una singola chiamata. Usala da un task dopo aver configurato il canale e installato il servizio fade richiesto dal driver del laboratorio. Puoi impostare insieme la durata dell’impulso alto e il punto del periodo in cui inizia.</p>
+<pre class="signature"><code>esp_err_t ledc_set_duty_and_update(ledc_mode_t speed_mode,
+                                   ledc_channel_t channel,
+                                   uint32_t duty, uint32_t hpoint);</code></pre>
+<dl class="metadata"><div><dt>Header</dt><dd><code>driver/ledc.h</code></dd></div><div><dt>Componente</dt><dd><code>esp_driver_ledc</code></dd></div></dl>
+<h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>speed_mode</code></td><td><code>ledc_mode_t</code></td><td>Usa LEDC_LOW_SPEED_MODE su ESP32-S3.</td></tr><tr><td><code>channel</code></td><td><code>ledc_channel_t</code></td><td>Canale LEDC da aggiornare, ad esempio LEDC_CHANNEL_0.</td></tr><tr><td><code>duty</code></td><td><code>uint32_t</code></td><td>Durata della parte alta in conteggi del timer.</td></tr><tr><td><code>hpoint</code></td><td><code>uint32_t</code></td><td>Conteggio del timer a cui comincia la parte alta. Usa 0 per farla partire all’inizio del periodo.</td></tr></tbody></table><h4>Ritorno <code>esp_err_t</code></h4><table><thead><tr><th scope="col">Valore</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ESP_OK</code></td><td>Aggiornamento riuscito.</td></tr><tr><td><code>ESP_ERR_INVALID_STATE</code></td><td>Canale non inizializzato.</td></tr><tr><td><code>ESP_ERR_INVALID_ARG</code></td><td>Parametro non valido.</td></tr></tbody></table><p class="note">Questa API è thread-safe. Nel driver ESP-IDF 6.1 del laboratorio, chiama prima <code>ledc_fade_func_install(0)</code> e controlla il suo esito. Se l’inizializzazione del canale fade fallisce, questa funzione restituisce <code>ESP_FAIL</code>. L’esempio a duty fisso usa <code>ledc_set_duty</code> e <code>ledc_update_duty</code> dallo stesso task.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Riferimento LEDC di Espressif</a></p>
+</article>
+<article class="api" id="ledc-set-update" data-name="PWM LEDC ledc_set_duty ledc_update_duty">
+<h3>Impostare il duty con due chiamate</h3>
+
+<pre><code>esp_err_t ledc_set_duty(ledc_mode_t speed_mode,
+                       ledc_channel_t channel, uint32_t duty);
+esp_err_t ledc_update_duty(ledc_mode_t speed_mode,
+                          ledc_channel_t channel);</code></pre>
+<p><code>ledc_set_duty</code> prepara il duty in conteggi e conserva il valore di <code>hpoint</code>. <code>ledc_update_duty</code> applica il valore preparato e il nuovo segnale ha effetto dal periodo PWM successivo. Entrambe ricevono la modalità e il canale e restituiscono <code>ESP_OK</code> in caso di successo o <code>ESP_ERR_INVALID_ARG</code> per parametri non validi.</p>
+<p>Usa le due chiamate dallo stesso task se controlli il canale con questa coppia. Per applicare il nuovo duty con una singola chiamata thread-safe dal task, vedi <a href="#ledc_set_duty_and_update"><code>ledc_set_duty_and_update</code></a>.</p>
+<p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Riferimento LEDC di Espressif</a></p>
+
+</article>
+<article class="api" id="ledc_stop" data-name="ledc_stop PWM LEDC">
+<div class="api-head"><h3><code>ledc_stop</code></h3><span class="tag">Funzione</span></div>
+<p class="summary">Disattiva l’uscita del canale e porta il pin al livello di riposo scelto. Usala quando vuoi arrestare il segnale del canale e scegliere lo stato del pin a riposo. Per lasciare spento il LED attivo alto del laboratorio, indica livello 0.</p>
+<pre class="signature"><code>esp_err_t ledc_stop(ledc_mode_t speed_mode, ledc_channel_t channel,
+                    uint32_t idle_level);</code></pre>
+<dl class="metadata"><div><dt>Header</dt><dd><code>driver/ledc.h</code></dd></div><div><dt>Componente</dt><dd><code>esp_driver_ledc</code></dd></div></dl>
+<h4>Parametri</h4><table><thead><tr><th scope="col">Parametro</th><th scope="col">Tipo</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>speed_mode</code></td><td><code>ledc_mode_t</code></td><td>Modalità del canale LEDC.</td></tr><tr><td><code>channel</code></td><td><code>ledc_channel_t</code></td><td>Canale di cui fermare l’uscita.</td></tr><tr><td><code>idle_level</code></td><td><code>uint32_t</code></td><td>Livello di riposo, 0 basso o 1 alto.</td></tr></tbody></table><h4>Ritorno <code>esp_err_t</code></h4><table><thead><tr><th scope="col">Valore</th><th scope="col">Significato</th></tr></thead><tbody><tr><td><code>ESP_OK</code></td><td>Uscita fermata.</td></tr><tr><td><code>ESP_ERR_INVALID_ARG</code></td><td>Parametro non valido.</td></tr></tbody></table><p class="note">Nell’esercizio puoi usare duty 0 per spegnere temporaneamente il LED tra due livelli. Usa ledc_stop quando vuoi fermare esplicitamente l’uscita.</p><p class="source"><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/ledc.html">Riferimento LEDC di Espressif</a></p>
+</article>
+</section>
 <section class="sources" id="fonti">
 <h2>Riferimenti</h2>
 <ul><li><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/freertos_idf.html">FreeRTOS su ESP32-S3</a></li><li><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/peripherals/gpio.html">Driver GPIO e interrupt</a></li><li><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-reference/system/esp_timer.html">ESP Timer</a></li><li><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-guides/error-handling.html">Errori ESP-IDF</a></li><li><a href="https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32s3/api-guides/build-system.html">Build system ESP-IDF</a></li></ul>

@@ -11,7 +11,7 @@ typedef enum {
     LED_ROSSO,
 } Led;
 
-esp_err_t led_pwm_init(Led led);
-esp_err_t led_pwm_set_duty(Led led, uint8_t duty);
+esp_err_t led_pwm_init();
+void led_pwm_set_duty(Led led, uint32_t duty);
 
 #endif //PWM_DUE_LED_LED_PWM_H

@@ -15,6 +15,7 @@ Quaderno pratico di esercizi su **ESP32-S3, ESP-IDF e FreeRTOS**, con circuiti v
 | [07 - PWM su due LED](esercizi/07-pwm-due-led/) | Timer condiviso e duty cycle indipendenti su due canali. |
 | [08 - Comando motore](esercizi/08-comando-motore/) | PWM e segnali di direzione, con verifica di avanti, pausa, indietro e stop in PulseView. |
 | [09 - Encoder](esercizi/09-encoder/) | Conteggio dei fronti di salita e rilevamento del verso con i canali A e B del KY-040. |
+| [10 - Rotazione e velocità della ruota](esercizi/10-rotazione-velocita/) | Angolo dal conteggio dell’encoder e velocità in RPM dai conteggi e dal tempo trascorso tra due letture. |
 
 ## Struttura
 

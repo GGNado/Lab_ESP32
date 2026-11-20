@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": -51, "left": -141.2, "attrs": {} },
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": -96.18,
+      "left": 311.77,
+      "attrs": {}
+    },
+    { "type": "wokwi-ky-040", "id": "encoder1", "top": 299.3, "left": -29.6, "attrs": {} },
+    {
+      "type": "wokwi-logic-analyzer",
+      "id": "logic1",
+      "top": 259.55,
+      "left": 316.8,
+      "attrs": { "channelNames": "Encoder_A,Encoder_B,Motor_PWM,Motor_IN1,Motor_IN2" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -243.6,
+      "left": 80.6,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:GND.1", "bb1:bn.25", "black", [ "h-9.65", "v19.2" ] ],
+    [ "encoder1:GND", "bb1:bn.21", "black", [ "h0" ] ],
+    [ "logic1:GND", "bb1:bn.22", "black", [ "h0" ] ],
+    [ "encoder1:VCC", "bb1:bp.23", "red", [ "h0" ] ],
+    [ "bb1:bp.25", "esp:3V3.2", "red", [ "v-0.9", "h145.6", "v-192" ] ],
+    [ "encoder1:CLK", "bb1:30b.h", "green", [ "h0" ] ],
+    [ "bb1:30b.f", "esp:4", "green", [ "v0" ] ],
+    [ "bb1:30b.g", "logic1:D0", "green", [ "v0", "h105.6", "v192" ] ],
+    [ "logic1:D1", "bb1:25b.j", "blue", [ "h-201.6", "v-9.6" ] ],
+    [ "encoder1:DT", "bb1:25b.i", "blue", [ "h19.2", "v-153.5" ] ],
+    [ "bb1:25b.h", "esp:5", "green", [ "v0" ] ],
+    [ "esp:16", "logic1:D2", "orange", [] ],
+    [ "esp:1", "logic1:D3", "purple", [] ],
+    [ "esp:2", "logic1:D4", "yellow", [] ],
+    [ "led1:C", "bb1:bn.1", "black", [ "v67.2", "h-268.4", "v278.4" ] ],
+    [ "led1:A", "bb1:bp.1", "green", [ "v96", "h-268.8", "v240" ] ]
+  ],
+  "dependencies": {}
+}
